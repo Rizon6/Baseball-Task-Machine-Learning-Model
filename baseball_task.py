@@ -1,16 +1,18 @@
 import numpy as np
 from sklearn.linear_model import Ridge
+from sklearn.impute import SimpleImputer
 import argparse
 import sys
 
 def main():
+    load_data()
     args = build_parser().parse_args()
-    if args.mode == 'train':
+    """if args.mode == 'train':
         training_mode(args.x, args.y, args.model, args.max_steps, args.order)
     elif args.mode == 'predict':
         prediction_mode(args.x, args.model, args.order, args.preds)
     elif args.mode == 'eval':
-        evaluation_mode(args.x, args.y, args.model, args.order)
+        evaluation_mode(args.x, args.y, args.model, args.order)"""
 
 def _mirror_for_help(action: argparse.Action, *groups: argparse._ArgumentGroup) -> None:
     """Make an existing action appear in additional help groups without re-registering it."""
@@ -59,6 +61,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     return p
 
-def load_data():
-    X_train = np.loadtxt()
-    Y_train = np.loadtxt("")
+def load_data(X_path, Y_path):
+    x = np.loadtxt("data/train.X")
+    y = np.loadtxt("data/train.RT")
+    return x, y
+
+def training_mode():
+    X_train, Y_train = load_data(x_train_path, y_train_path)
+    X_dev, Y_dev = load_data(x_dev_path, y_dev_path)
+
+if __name__ == "__main__":
+    main()
