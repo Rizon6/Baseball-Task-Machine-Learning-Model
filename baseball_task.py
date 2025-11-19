@@ -1,6 +1,9 @@
 import numpy as np
 from sklearn.linear_model import Ridge
 from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+import joblib
 import argparse
 import sys
 
@@ -61,14 +64,29 @@ def build_parser() -> argparse.ArgumentParser:
 
     return p
 
+def build_model(alpha = 1):
+    return Pipeline ([
+        ("imputer", SimpleImputer(missing_values = -1, strategy = "mean"))
+        ("scaler", StandardScaler())
+        ("model", Ridge(alpha = alpha))
+    ])
+
 def load_data(X_path, Y_path):
-    x = np.loadtxt("data/train.X")
-    y = np.loadtxt("data/train.RT")
+    x = np.loadtxt(X_path)
+    y = np.loadtxt(Y_path)
     return x, y
 
-def training_mode():
-    X_train, Y_train = load_data(x_train_path, y_train_path)
-    X_dev, Y_dev = load_data(x_dev_path, y_dev_path)
+def training_mode(x_path, y_path, model_path):
+    x_train, y_train = load_data(x_path, y_path)
+    model = build_model()
+    model.fit(x_train, y_train)
+    joblib.dump(model, model_path)
+
+def prediction_mode(x_path, model_path, pred_path = None):
+    x, y = load_data(x_path, y_path)
+    model = joblib.load(model_path)
+    y_predictions = model.predict()
+    
 
 if __name__ == "__main__":
     main()
