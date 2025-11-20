@@ -71,9 +71,10 @@ def build_model(alpha = 1):
         ("model", Ridge(alpha = alpha))
     ])
 
-def load_data(X_path, Y_path):
-    x = np.loadtxt(X_path)
-    y = np.loadtxt(Y_path)
+def load_data(x_path, y_path = None):
+    x = np.loadtxt(x_path)
+    if y_path:
+        y = np.loadtxt(y_path)
     return x, y
 
 def training_mode(x_path, y_path, model_path):
@@ -83,9 +84,18 @@ def training_mode(x_path, y_path, model_path):
     joblib.dump(model, model_path)
 
 def prediction_mode(x_path, model_path, pred_path = None):
-    x, y = load_data(x_path, y_path)
+    x = load_data(x_path)
     model = joblib.load(model_path)
-    y_predictions = model.predict()
+    y_predictions = model.predict(x)
+
+    if pred_path:
+        joblib.dump(y_predictions, pred_path)
+    return y_predictions
+
+
+def evaluation_mode(x_path, y_path, model_path, pred_path):
+    x, y = load_data(x_path, y_path)
+    y_pred = prediction_mode(x_path, model_path)
     
 
 if __name__ == "__main__":
