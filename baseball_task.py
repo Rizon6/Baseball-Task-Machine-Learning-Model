@@ -80,7 +80,7 @@ def build_model(model_type, alpha):
         return Pipeline ([
             ("imputer", SimpleImputer(missing_values = -1, strategy = "mean")),
             ("scaler", StandardScaler()),
-            ("model", ElasticNet(alpha = alpha))
+            ("model", ElasticNet(alpha = alpha, l1_ratio = 0.5))
         ])
 
 def load_xy(x_path, y_path):
