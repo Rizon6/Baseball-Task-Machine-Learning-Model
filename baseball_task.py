@@ -1,5 +1,7 @@
 import numpy as np
 from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import ElasticNet
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -61,12 +63,25 @@ def build_parser() -> argparse.ArgumentParser:
 
     return p
 
-def build_model(alpha):
-    return Pipeline ([
-        ("imputer", SimpleImputer(missing_values = -1, strategy = "mean")),
-        ("scaler", StandardScaler()),
-        ("model", Ridge(alpha = alpha))
-    ])
+def build_model(model_type, alpha):
+    if model_type == "ridge":
+        return Pipeline ([
+            ("imputer", SimpleImputer(missing_values = -1, strategy = "mean")),
+            ("scaler", StandardScaler()),
+            ("model", Ridge(alpha = alpha))
+        ])
+    if model_type == "lasso":
+        return Pipeline ([
+            ("imputer", SimpleImputer(missing_values = -1, strategy = "mean")),
+            ("scaler", StandardScaler()),
+            ("model", Lasso(alpha = alpha))
+        ])
+    if model_type == "elastic":
+        return Pipeline ([
+            ("imputer", SimpleImputer(missing_values = -1, strategy = "mean")),
+            ("scaler", StandardScaler()),
+            ("model", ElasticNet(alpha = alpha))
+        ])
 
 def load_xy(x_path, y_path):
     x = np.loadtxt(x_path)
